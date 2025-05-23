@@ -2,6 +2,7 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/picolibc" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/threadx" vcs="Git" />
   </component>
 </project>
