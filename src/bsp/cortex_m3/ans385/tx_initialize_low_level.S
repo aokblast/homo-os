@@ -110,10 +110,10 @@ _tx_initialize_low_level:
     STR     r1, [r0]                                // Save system stack pointer
 
     /* Enable the cycle count register.  */
-    LDR     r0, =0xE0001000                         // Build address of DWT register
-    LDR     r1, [r0]                                // Pickup the current value
-    ORR     r1, r1, #1                              // Set the CYCCNTENA bit
-    STR     r1, [r0]                                // Enable the cycle count register
+    // LDR     r0, =0xE0001000                         // Build address of DWT register
+    // LDR     r1, [r0]                                // Pickup the current value
+    // ORR     r1, r1, #1                              // Set the CYCCNTENA bit
+    // STR     r1, [r0]                                // Enable the cycle count register
 
     /* Configure SysTick.  */
     MOV     r0, #0xE000E000                         // Build address of NVIC registers
