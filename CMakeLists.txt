@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.13)
 project(homo-os C ASM)
 
 message(STATUS "Using Toolchain File: ${CMAKE_TOOLCHAIN_FILE}")
+
+set(__THREAD_LOCAL_STORAGE_API TRUE)
+
 # Include picolibc
 add_subdirectory(picolibc crt)
 
