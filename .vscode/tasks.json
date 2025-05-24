@@ -1,0 +1,40 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build",
+            "type": "shell",
+            "command": "cd build && cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=toolchains/cortex_m3.cmake .. && make -j $(nproc)",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+        },
+        {
+            "label": "Run QEMU",
+            "type": "shell",
+            "command": "echo 'QEMU started'; qemu-system-arm -cpu cortex-m3 -machine lm3s6965evb -nographic -gdb tcp::1234 -S -kernel ${workspaceFolder}/build/homo-os.elf",
+            "dependsOn": [
+                "Build"
+            ],
+            "isBackground": true,
+            "problemMatcher": [
+                {
+                    "pattern": [
+                        {
+                            "regexp": ".",
+                            "file": 1,
+                            "location": 2,
+                            "message": 3
+                        }
+                    ],
+                    "background": {
+                        "activeOnStart": true,
+                        "beginsPattern": ".",
+                        "endsPattern": "QEMU started",
+                    }
+                }
+            ]
+        }
+    ]
+}
