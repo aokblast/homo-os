@@ -108,14 +108,12 @@ SECTIONS
 	.heap (COPY):
 	{
     __heap_start__ = ALIGN(4);
-    __heap_start = __heap_start__;
     end = __heap_start__;
     _end = end;
      __end = end;
     *(.heap)
     . = ALIGN(. + __HEAPSIZE__, 4);
     __heap_end__ = ALIGN(4);
-    __heap_end = __heap_end__;
 	} > RAM
 
   .stack ALIGN(4) (NOLOAD) :
