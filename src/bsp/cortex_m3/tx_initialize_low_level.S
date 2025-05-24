@@ -146,7 +146,10 @@ __tx_BadHandler:
     .global  __tx_HardfaultHandler
     .thumb_func
 __tx_HardfaultHandler:
-    B       __tx_HardfaultHandler
+    push    {lr}
+    BL      print_goodday
+__tx_HardfaultHandler_r:
+    B       __tx_HardfaultHandler_r
 
 /* added to catch the SVC */
     .global  __tx_SVCallHandler
