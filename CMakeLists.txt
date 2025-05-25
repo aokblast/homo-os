@@ -11,6 +11,12 @@ add_subdirectory(picolibc crt)
 # Include ThreadX as a subdirectory
 add_subdirectory(threadx tx)
 
+# Include filex (netxduo dependency)
+add_subdirectory(filex file)
+
+# Include netxduo
+add_subdirectory(netxduo net)
+
 # Include your application source
 include_directories(
         ${CMAKE_SOURCE_DIR}/src

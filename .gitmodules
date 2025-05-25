@@ -4,3 +4,9 @@
 [submodule "picolibc"]
 	path = picolibc
 	url = https://github.com/picolibc/picolibc.git
+[submodule "netxduo"]
+	path = netxduo
+	url = https://github.com/eclipse-threadx/netxduo.git
+[submodule "filex"]
+	path = filex
+	url = https://github.com/eclipse-threadx/filex.git

@@ -13,7 +13,7 @@
         {
             "label": "Run QEMU",
             "type": "shell",
-            "command": "echo 'QEMU started'; qemu-system-arm -cpu cortex-m3 -machine lm3s6965evb -nographic -gdb tcp::1234 -S -kernel ${workspaceFolder}/build/homo-os.elf",
+            "command": "echo 'QEMU started'; qemu-system-arm -cpu cortex-m3 -machine mps2-an385 -nographic -gdb tcp::1234 -S -kernel ${workspaceFolder}/build/homo-os.elf",
             "dependsOn": [
                 "Build"
             ],
