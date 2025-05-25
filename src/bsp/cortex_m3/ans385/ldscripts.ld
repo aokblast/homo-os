@@ -1,12 +1,14 @@
 MEMORY
 {
-  RAM (wx) : ORIGIN = 0x20000000, LENGTH = 0x00800000
+  RAM (wx) : ORIGIN = 0x20000000, LENGTH = 0x00400000
   FLASH (rx) : ORIGIN = 0x00000000, LENGTH = 0x00400000
 }
 
+ENTRY(reset_handler)
+
 __STACKSIZE__ = 1024;
 __STACKSIZE_PROCESS__ = 0;
-__HEAPSIZE__ = 128;
+__HEAPSIZE__ = 16384;
 
 SECTIONS
 {
@@ -17,6 +19,7 @@ SECTIONS
 
 	.text :
 	{
+	    . = ALIGN(8);
 		*(.text*)
 
 		KEEP(*(.init))

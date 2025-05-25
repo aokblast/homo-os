@@ -14,18 +14,23 @@ add_subdirectory(threadx tx)
 # Include your application source
 include_directories(
         ${CMAKE_SOURCE_DIR}/src
+        ${CMAKE_SOURCE_DIR}/src/bsp/drivers/
 )
 
 if (NOT ${THREADX_ARCH} STREQUAL "linux")
-    set(LINKER_SCRIPT "${CMAKE_SOURCE_DIR}/src/bsp/${THREADX_ARCH}/sample_threadx.ld")
-    file(GLOB BSP_SRC CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/src/bsp/${THREADX_ARCH}/*.S")
+    set(LINKER_SCRIPT "${CMAKE_SOURCE_DIR}/src/bsp/${THREADX_ARCH}/${BOARD_NAME}/ldscripts.ld")
+    file(GLOB BSP_PLAT_SRC CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/src/bsp/${THREADX_ARCH}/*.S")
+    file(GLOB BSP_PLAT_BRD_SRC CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/src/bsp/${THREADX_ARCH}/${BOARD_NAME}/*.S")
+    file(GLOB CRT_BRD_SRC CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/src/crt/${BOARD_NAME}/*.c")
 endif ()
+
+file(GLOB BSP_SRC CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/src/bsp/drivers/*.c")
 
 file(GLOB CRT_SRC CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/src/crt/*.c")
 
 file(GLOB APP_SRC CONFIGURE_DEPENDS "src/*.c")
 
-add_executable(${PROJECT_NAME}.elf ${APP_SRC} ${BSP_SRC} ${CRT_SRC})
+add_executable(${PROJECT_NAME}.elf ${APP_SRC} ${BSP_SRC} ${BSP_PLAT_SRC} ${BSP_PLAT_BRD_SRC} ${CRT_SRC} ${CRT_BRD_SRC})
 
 set_property(TARGET ${PROJECT_NAME}.elf PROPERTY LINK_DEPENDS ${LINKER_SCRIPT})
 

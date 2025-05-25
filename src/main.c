@@ -67,4 +67,5 @@ void    tx_application_define(void *first_unused_memory) {
                    16, 16, 4, TX_AUTO_START);
   void *d = malloc(1000);
   assert(d);
+  free(d);
 }
