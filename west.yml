@@ -1,0 +1,11 @@
+manifest:
+  # lowest version of the manifest file schema that can parse this file’s data
+  version: 0.8
+
+  projects:
+    - name: zephyr
+      revision: v4.1.0
+      url: https://github.com/zephyrproject-rtos/zephyr
+      path: zephyr
+      # explicitly add Zephyr-specific West extensions
+      west-commands: scripts/west-commands.yml

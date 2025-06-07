@@ -1,0 +1,48 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Init",
+            "type": "shell",
+            "command": "west init && west update",
+            "group": {
+                "kind": "build",
+            },
+        },
+        {
+            "label": "Build",
+            "type": "shell",
+            "command": "source ~/venv/bin/activate && west build",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+        },
+        {
+            "label": "Run QEMU",
+            "type": "shell",
+            "command": "echo 'QEMU started'; qemu-system-arm -cpu cortex-m3 -machine mps2-an385 -nographic -gdb tcp::1234 -S -kernel ${workspaceFolder}/build/zephyr/zephyr.elf",
+            "dependsOn": [
+                "Build"
+            ],
+            "isBackground": true,
+            "problemMatcher": [
+                {
+                    "pattern": [
+                        {
+                            "regexp": ".",
+                            "file": 1,
+                            "location": 2,
+                            "message": 3
+                        }
+                    ],
+                    "background": {
+                        "activeOnStart": true,
+                        "beginsPattern": ".",
+                        "endsPattern": "QEMU started",
+                    }
+                }
+            ]
+        }
+    ]
+}
