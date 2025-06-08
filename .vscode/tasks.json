@@ -4,7 +4,7 @@
         {
             "label": "Init",
             "type": "shell",
-            "command": "west init app && west update",
+            "command": "west update",
             "group": {
                 "kind": "build",
             },
