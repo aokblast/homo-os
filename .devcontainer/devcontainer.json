@@ -17,6 +17,9 @@
 				"ms-vscode.cpptools"
 			]
 		}
+	},
+	"containerEnv": {
+		"GNUARMEMB_TOOLCHAIN_PATH": "/usr"
 	}
 
 	// Features to add to the dev container. More info: https://containers.dev/features.

@@ -1,0 +1,12 @@
+manifest:
+  version: 0.8
+
+  projects:
+    - name: zephyr
+      revision: v4.1.0
+      url: https://github.com/zephyrproject-rtos/zephyr
+      import:
+        path-prefix: deps
+        name-allowlist:
+          - cmsis
+          - picolibc

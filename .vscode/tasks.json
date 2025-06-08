@@ -4,7 +4,7 @@
         {
             "label": "Init",
             "type": "shell",
-            "command": "west init && west update",
+            "command": "west init app && west update",
             "group": {
                 "kind": "build",
             },
@@ -12,7 +12,7 @@
         {
             "label": "Build",
             "type": "shell",
-            "command": "source ~/venv/bin/activate && west build",
+            "command": "source /venv/bin/activate && west build app -- -G'Unix Makefiles'",
             "group": {
                 "kind": "build",
                 "isDefault": true
