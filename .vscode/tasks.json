@@ -2,17 +2,9 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Init",
-            "type": "shell",
-            "command": "west update",
-            "group": {
-                "kind": "build",
-            },
-        },
-        {
             "label": "Build",
             "type": "shell",
-            "command": "source /venv/bin/activate && west build app -- -G'Unix Makefiles'",
+            "command": "source /venv/bin/activate && west update && west build app -- -G'Unix Makefiles'",
             "group": {
                 "kind": "build",
                 "isDefault": true
@@ -21,7 +13,7 @@
         {
             "label": "Run QEMU",
             "type": "shell",
-            "command": "echo 'QEMU started'; qemu-system-arm -cpu cortex-m3 -machine mps2-an385 -nographic -gdb tcp::1234 -S -kernel ${workspaceFolder}/build/zephyr/zephyr.elf",
+            "command": "echo 'QEMU started'; qemu-system-arm -cpu cortex-m3 -machine mps2-an385 -netdev tap,id=mynet0,ifname=virbr0-nic,script=no -net nic,macaddr=52:54:00:12:34:AD,model=lan9118,netdev=mynet0 -nographic -gdb tcp::1234 -S -kernel ${workspaceFolder}/build/zephyr/zephyr.elf",
             "dependsOn": [
                 "Build"
             ],

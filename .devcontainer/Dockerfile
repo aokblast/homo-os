@@ -4,3 +4,4 @@ RUN apt install -y device-tree-compiler python3-pip
 
 RUN python3 -m venv venv && bash -c "source venv/bin/activate && pip3 install west pyelftools"
 RUN apt install -y git
+RUN apt install -y netcat iproute2
