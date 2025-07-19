@@ -17,4 +17,5 @@ target_sources(
     app
     PRIVATE
     src/main.c
+    src/decode_data.c
 )
