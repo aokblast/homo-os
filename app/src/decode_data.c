@@ -1,4 +1,7 @@
 #include "chacha20.h"
+extern uint8_t __data_start[];
+extern uint8_t __data_end[];
+
 
 void z_data_copy(void)
 {
@@ -40,9 +43,8 @@ void z_data_copy(void)
     key[30] = 0x0;
     key[31] = 0x0;
     
-    char *data_start = NULL;
-    int size_of_buffer = 0x87;
+    int size_of_buffer = __data_end - __data_start;
 
     chacha20_init_context(&ctx, key, nonce, 0);
-    chacha20_xor(&ctx, data_start, size_of_buffer);
+    chacha20_xor(&ctx, __data_start, size_of_buffer);
 }

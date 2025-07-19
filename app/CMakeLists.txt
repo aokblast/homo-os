@@ -18,4 +18,5 @@ target_sources(
     PRIVATE
     src/main.c
     src/decode_data.c
+    src/chacha20.c
 )
