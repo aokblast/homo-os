@@ -13,7 +13,7 @@
         {
             "label": "Run QEMU",
             "type": "shell",
-            "command": "echo 'QEMU started'; qemu-system-arm -cpu cortex-m3 -machine mps2-an385 -netdev tap,id=mynet0,ifname=virbr0-nic,script=no -net nic,macaddr=52:54:00:12:34:AD,model=lan9118,netdev=mynet0 -nographic -gdb tcp::1234 -S -kernel ${workspaceFolder}/build/zephyr/zephyr.elf",
+            "command": "echo 'QEMU started'; qemu-system-arm -cpu cortex-m3 -machine mps2-an385 -netdev tap,id=mynet0,ifname=virbr0-nic,script=no -net nic,macaddr=52:54:00:12:34:AD,model=lan9118,netdev=mynet0 -nographic -gdb tcp::1234 -S -kernel ${workspaceFolder}/build/homo_final.elf",
             "dependsOn": [
                 "Build"
             ],

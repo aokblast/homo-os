@@ -21,7 +21,13 @@ static void chacha20_init_block(struct chacha20_context *ctx, uint8_t key[], uin
 	memcpy(ctx->key, key, sizeof(ctx->key));
 	memcpy(ctx->nonce, nonce, sizeof(ctx->nonce));
 
-	const uint8_t *magic_constant = (uint8_t*)"expand 32-byte k";
+	uint8_t magic_constant[16] = {
+        'e', 'x', 'p', 'a',
+        'n', 'd', ' ', '3',
+        '2', '-', 'b', 'y',
+        't', 'e', ' ', 'k'
+    };
+	
 	ctx->state[0] = pack4(magic_constant + 0 * 4);
 	ctx->state[1] = pack4(magic_constant + 1 * 4);
 	ctx->state[2] = pack4(magic_constant + 2 * 4);

@@ -2,6 +2,7 @@
     "files.associations": {
         "tls_credentials.h": "c",
         "server.h": "c",
-        "service.h": "c"
+        "service.h": "c",
+        "chacha20.h": "c"
     }
 }

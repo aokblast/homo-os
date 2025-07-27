@@ -61,5 +61,6 @@ HTTP_RESOURCE_DEFINE(dyn_resource, homo, "/dynamic",
 
 int main(void)
 {
+	printf("hello world\n");
     http_server_start();
 }
