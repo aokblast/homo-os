@@ -3,23 +3,25 @@ from Crypto.Cipher import ChaCha20
 import sys
 def main(ifname:str, ofname:str):
     elf = lief.ELF.parse(ifname)
-    rostart = -1
-    roend = -1
+    rostart_va = -1
+    roend_va = -1
     for sym in elf.symbols:
         if sym.name == "__rodata_region_start":
-            rostart = sym.value
+            rostart_va = sym.value
         if sym.name == "__rodata_region_end":
-            roend = sym.value
+            roend_va = sym.value
 
     for sec in elf.sections:
-        if sec.virtual_address == rostart:
-            rostart = sec.offset
-        if sec.virtual_address + sec.size == roend:
-            roend = sec.offset + sec.size
+        if sec.virtual_address == rostart_va:
+            rostart = sec.file_offset
+        
+        if sec.virtual_address + sec.size == roend_va:
+            roend = sec.file_offset + sec.size
     
     
-    print(f"ro start: {hex(rostart)}")
-    print(f"ro end: {hex(roend)}")
+
+    print(f"ro start: {hex(rostart_va)} -> {hex(rostart)}")
+    print(f"ro end:   {hex(roend_va)  } -> {hex(roend)}")
     
     for idx, seg in enumerate(elf.segments):
         if seg.file_offset <= rostart  and  roend <= seg.file_offset + len(seg.content):
