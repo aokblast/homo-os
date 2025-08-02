@@ -14,8 +14,10 @@ project(homo-os C ASM)
 
 file(GLOB DRV_SRCS ./src/drivers/*.c)
 file(GLOB FS_SRCS ./homo-fs/lib/*.c)
+file(GLOB TINYAES_SRC ./tiny-AES-c/aes.c)
 
 zephyr_include_directories(./homo-fs/lib/)
+zephyr_include_directories(./tiny-AES-c)
 add_subdirectory(tiny-AES-c)
 
 # build homo os pack tools
@@ -34,7 +36,7 @@ add_custom_command(
 add_custom_command(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/homo_fs_data
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/homo_pack
-    COMMAND cd ${CMAKE_CURRENT_SOURCE_DIR} && ${CMAKE_CURRENT_BINARY_DIR}/homo_pack fe ${CMAKE_CURRENT_BINARY_DIR}/homo_fs_data
+    COMMAND cd ${CMAKE_CURRENT_SOURCE_DIR} && ${CMAKE_CURRENT_BINARY_DIR}/homo_pack -k 5ZCJ5oGp44CC5q24 -i 5bCP6LGs5Y2a6Z2I fe ${CMAKE_CURRENT_BINARY_DIR}/homo_fs_data
 )
 
 # build homo_fs_data to object
@@ -83,8 +85,6 @@ target_sources(
     PRIVATE
     src/decode_data.c
     src/chacha20.c
-    src/main.c ${DRV_SRCS} ${FS_SRCS}
+    src/main.c ${DRV_SRCS} ${FS_SRCS} ${TINYAES_SRC}
     ${CMAKE_CURRENT_BINARY_DIR}/homo_fs_data.o
 )
-
-zephyr_link_libraries(tiny-aes)
