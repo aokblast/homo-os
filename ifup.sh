@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 export VM_IP_ADDRESS=10.211.55.1
 export VM_CIDR=24
 
