@@ -9,12 +9,12 @@
 #include <stddef.h>
 
 struct homo_fs_backend_param {
-    void *base_addr;
-    int size;
+  void *base_addr;
+  int size;
 };
 
 struct homo_fs_filesystem_param {
-    struct homo_fs *fs;
+  struct homo_fs *fs;
 };
 
 struct homo_fs_file_param {
@@ -22,4 +22,4 @@ struct homo_fs_file_param {
   struct homo_fs_file_entry *fent;
 };
 
-#endif //HOMO_OS_FS_H
+#endif // HOMO_OS_FS_H

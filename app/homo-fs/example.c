@@ -2,14 +2,14 @@
 // Created by aokblast on 2025/6/15.
 //
 
-#include <sys/stat.h>
 #include <assert.h>
+#include <sys/stat.h>
 
-#include <unistd.h>
-#include <fcntl.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include "homofs.h"
+#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 int main() {
   struct homo_fs *fs;
@@ -24,7 +24,8 @@ int main() {
   assert(dir);
   file = homo_fs_entry_dir_add_file(dir, "114514.c", FS_FILE);
   assert(file);
-  assert(homo_fs_entry_file_write(file, (uint8_t *)str, sizeof(str)) == sizeof(str));
+  assert(homo_fs_entry_file_write(file, (uint8_t *)str, sizeof(str)) ==
+         sizeof(str));
 
   int fd = open("./output", O_WRONLY | O_CREAT);
   assert(fd != -1);

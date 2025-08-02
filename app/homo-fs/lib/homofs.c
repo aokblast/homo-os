@@ -2,8 +2,8 @@
 // Created by aokblast on 2025/6/9.
 //
 #include <errno.h>
-#include <stdio.h>
 #include <stddef.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/cdefs.h>
@@ -155,7 +155,7 @@ extract_dir(struct homo_fs *fs, const char **_path, int create_when_not_found) {
   filename++;
   *_path += (filename - path);
   if (*path == '\0')
-      return fs->root;
+    return fs->root;
 
   struct homo_fs_file_entry *res =
       find_dir(fs->root, path, create_when_not_found);
@@ -468,12 +468,14 @@ int homo_fs_entry_dir_foreach_files(struct homo_fs_file_entry *dir,
   return 0;
 }
 
-struct homo_fs_file_entry * homo_fs_entry_next_file(struct homo_fs_file_entry *ent) {
+struct homo_fs_file_entry *
+homo_fs_entry_next_file(struct homo_fs_file_entry *ent) {
   return LIST_NEXT(ent, siblings);
 }
 
-struct homo_fs_file_entry *homo_fs_entry_dir_get_child(struct homo_fs_file_entry *dir) {
-    if (dir->type != FS_DIR)
-      return NULL;
-    return (dir->dir_data.children.lh_first);
+struct homo_fs_file_entry *
+homo_fs_entry_dir_get_child(struct homo_fs_file_entry *dir) {
+  if (dir->type != FS_DIR)
+    return NULL;
+  return (dir->dir_data.children.lh_first);
 }

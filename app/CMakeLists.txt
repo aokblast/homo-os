@@ -65,6 +65,11 @@ add_custom_command(
     COMMENT "Embedding raw binary file into firmware"
 )
 
+zephyr_linker_sources(SECTIONS sections-rom.ld)
+zephyr_linker_section(NAME
+                http_resource_desc_homo
+				KVMA RAM_REGION GROUP RODATA_REGION
+				SUBALIGN ${CONFIG_LINKER_ITERABLE_SUBALIGN})
 
 # The target "app" is defined within the Zephyr package by "find_package(Zephyr ...)".
 target_sources(

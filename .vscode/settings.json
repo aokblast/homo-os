@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "tls_credentials.h": "c",
+        "server.h": "c",
+        "service.h": "c"
+    }
+}

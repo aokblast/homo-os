@@ -15,7 +15,6 @@
 #include <string.h>
 #include <unistd.h>
 
-
 #include "aes.h"
 
 #include "homofs.h"
@@ -30,7 +29,8 @@ __attribute__((noreturn)) void usage() {
   exit(1);
 }
 
-static int dfs_parse_dir(int fd, struct homo_fs_file_entry *parent, const char *filename) {
+static int dfs_parse_dir(int fd, struct homo_fs_file_entry *parent,
+                         const char *filename) {
   struct stat stat;
   struct stat fs;
   struct homo_fs_file_entry *ent;
@@ -132,7 +132,7 @@ static int dfs_parse_fs(struct homo_fs_file_entry *cur, void *user_data) {
       AES_init_ctx_iv(&ctx, keys, ivs);
       AES_CBC_decrypt_buffer(&ctx, buffer, size - size % 16);
     }
-    write(cfd, buffer,size);
+    write(cfd, buffer, size);
     free(buffer);
     close(cfd);
   }
@@ -188,21 +188,21 @@ int main(int argc, char *argv[]) {
   uint8_t ckeys[16] = {0};
   uint8_t civs[16] = {0};
 
-  while((c = getopt(argc, argv, "rk:i:")) != -1) {
-      switch (c) {
-        case 'r':
-          f_rev = 1;
-          break;
-        case 'k':
-          strncpy(ckeys, optarg, sizeof(ckeys));
-          keys = ckeys;
-          break;
-        case 'i':
-          strncpy(civs, optarg, sizeof(civs));
-          ivs = civs;
-        default:
-          break;
-      }
+  while ((c = getopt(argc, argv, "rk:i:")) != -1) {
+    switch (c) {
+    case 'r':
+      f_rev = 1;
+      break;
+    case 'k':
+      strncpy(ckeys, optarg, sizeof(ckeys));
+      keys = ckeys;
+      break;
+    case 'i':
+      strncpy(civs, optarg, sizeof(civs));
+      ivs = civs;
+    default:
+      break;
+    }
   }
 
   if (keys && !ivs)
