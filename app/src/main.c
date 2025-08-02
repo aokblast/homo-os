@@ -65,7 +65,7 @@ static int lsdir(const char *path) {
 
     assert(fs_open(&filep, "/abc/index.html", FS_O_READ) == 0);
 
-    assert(fs_read(&filep, buffer, sizeof(buffer)) >= 0);
+    assert(fs_read(&filep, buffer, sizeof(buffer)) == entry.size);
 
     printf("%s\n", buffer);
 

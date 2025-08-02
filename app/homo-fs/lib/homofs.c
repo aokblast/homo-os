@@ -477,5 +477,5 @@ struct homo_fs_file_entry *
 homo_fs_entry_dir_get_child(struct homo_fs_file_entry *dir) {
   if (dir->type != FS_DIR)
     return NULL;
-  return (dir->dir_data.children.lh_first);
+  return (LIST_FIRST(&dir->dir_data.children));
 }
