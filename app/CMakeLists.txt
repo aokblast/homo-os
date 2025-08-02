@@ -21,6 +21,8 @@ add_subdirectory(tiny-AES-c)
 # build homo os pack tools
 add_custom_command(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/homo_pack
+    DEPENDS ${FS_SRCS} ./homo-fs/homo_pack.c ./homo-fs/CMakeLists.txt
+
     COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_SOURCE_DIR}/homo-fs/build
     COMMAND ${CMAKE_COMMAND} -E chdir ${CMAKE_CURRENT_SOURCE_DIR}/homo-fs/build ${CMAKE_COMMAND} ..
     COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_SOURCE_DIR}/homo-fs/build
@@ -33,8 +35,11 @@ add_custom_command(
 # build fs
 add_custom_command(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/homo_fs_data
-    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/homo_pack
-    COMMAND cd ${CMAKE_CURRENT_SOURCE_DIR} && ${CMAKE_CURRENT_BINARY_DIR}/homo_pack fe ${CMAKE_CURRENT_BINARY_DIR}/homo_fs_data
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/fe ${CMAKE_CURRENT_BINARY_DIR}/homo_pack
+    COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/script/gen_gz_fs.py
+        ${CMAKE_CURRENT_SOURCE_DIR}/fe
+        ${CMAKE_CURRENT_BINARY_DIR}/fe_gz
+    COMMAND ${CMAKE_CURRENT_BINARY_DIR}/homo_pack ${CMAKE_CURRENT_BINARY_DIR}/fe_gz ${CMAKE_CURRENT_BINARY_DIR}/homo_fs_data
 )
 
 # build homo_fs_data to object

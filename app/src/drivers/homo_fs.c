@@ -132,7 +132,9 @@ int homo_fs_closedir(struct fs_dir_t *dirp __unused) { return 0; }
 int homo_fs_stat(struct fs_mount_t *mountp, const char *path,
                  struct fs_dirent *entry) {
   struct homo_fs_filesystem_param *param = mountp->fs_data;
-  struct homo_fs_file_entry *fent = homo_fs_find_file(param->fs, path);
+  struct homo_fs_file_entry *fent;
+  path += mountp->mountp_len;
+  fent = homo_fs_find_file(param->fs, path);
   if (fent == NULL)
     return EINVAL;
   entry->type = homo_fs_entry_get_type(fent) == FS_DIR ? FS_DIR_ENTRY_DIR

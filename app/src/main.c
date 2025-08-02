@@ -63,12 +63,11 @@ static int lsdir(const char *path) {
       break;
     }
 
-    assert(fs_open(&filep, "/abc/index.html", FS_O_READ) == 0);
+    assert(fs_open(&filep, "/abc/index.html.gz", FS_O_READ) == 0);
 
     assert(fs_read(&filep, buffer, sizeof(buffer)) == entry.size);
 
-    printf("%s\n", buffer);
-
+    
     if (entry.type == FS_DIR_ENTRY_DIR) {
       printf("[DIR ] %s\n", entry.name);
     } else {
@@ -129,7 +128,15 @@ struct http_resource_detail_dynamic dyn_resource_detail = {
     .cb = dyn_handler,
     .user_data = NULL,
 };
+static struct http_resource_detail_static_fs static_file_resource_detail = {
+	.common = {
+			.type = HTTP_RESOURCE_TYPE_STATIC_FS,
+			.bitmask_of_supported_http_methods = BIT(HTTP_GET),
+		},
+	.fs_path = "/abc"
+};
 
+HTTP_RESOURCE_DEFINE(static_file_resource, homo, "/*", &static_file_resource_detail);
 HTTP_RESOURCE_DEFINE(dyn_resource, homo, "/dynamic", &dyn_resource_detail);
 
 int main(void) {
