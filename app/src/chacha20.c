@@ -18,16 +18,29 @@ static uint32_t pack4(const uint8_t *a)
 
 static void chacha20_init_block(struct chacha20_context *ctx, uint8_t key[], uint8_t nonce[])
 {
+	uint8_t magic_constant[16];
+	
 	memcpy(ctx->key, key, sizeof(ctx->key));
 	memcpy(ctx->nonce, nonce, sizeof(ctx->nonce));
 
-	uint8_t magic_constant[16] = {
-        'e', 'x', 'p', 'a',
-        'n', 'd', ' ', '3',
-        '2', '-', 'b', 'y',
-        't', 'e', ' ', 'k'
-    };
-	
+
+	magic_constant[0]  = 'e';
+	magic_constant[1]  = 'x';
+	magic_constant[2]  = 'p';
+	magic_constant[3]  = 'a';
+	magic_constant[4]  = 'n';
+	magic_constant[5]  = 'd';
+	magic_constant[6]  = ' ';
+	magic_constant[7]  = '3';
+	magic_constant[8]  = '2';
+	magic_constant[9]  = '-';
+	magic_constant[10] = 'b';
+	magic_constant[11] = 'y';
+	magic_constant[12] = 't';
+	magic_constant[13] = 'e';
+	magic_constant[14] = ' ';
+	magic_constant[15] = 'k';
+
 	ctx->state[0] = pack4(magic_constant + 0 * 4);
 	ctx->state[1] = pack4(magic_constant + 1 * 4);
 	ctx->state[2] = pack4(magic_constant + 2 * 4);

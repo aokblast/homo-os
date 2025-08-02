@@ -3,6 +3,13 @@
         "tls_credentials.h": "c",
         "server.h": "c",
         "service.h": "c",
-        "chacha20.h": "c"
+        "chacha20.h": "c",
+        "log.h": "c",
+        "kernel_internal.h": "c",
+        "kernel.h": "c",
+        "linker-defs.h": "c",
+        "array": "c",
+        "string": "c",
+        "string_view": "c"
     }
 }

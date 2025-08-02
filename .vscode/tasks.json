@@ -4,7 +4,7 @@
         {
             "label": "Build",
             "type": "shell",
-            "command": "source /venv/bin/activate && west update && west build app -- -G'Unix Makefiles'",
+            "command": "rm -f ${workspaceFolder}/build/zephyr/zephyr.elf && source /venv/bin/activate && west update && west build app -- -G'Unix Makefiles'",
             "group": {
                 "kind": "build",
                 "isDefault": true
