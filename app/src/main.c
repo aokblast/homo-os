@@ -32,15 +32,19 @@ static struct fs_mount_t mp = {
 
 static int lsdir(const char *path) {
   int res;
-  struct fs_dir_t dirp;
-  struct fs_dirent entry;
+  struct fs_dir_t dirp = {0};
+  struct fs_dirent entry = {0};
   struct fs_file_t filep = {0};
-  char buffer[1024];
+  char buffer[1024] = {0};
 
+  z_check_stack_sentinel();
   fs_dir_t_init(&dirp);
-
+  z_check_stack_sentinel();
+  
   /* Verify fs_opendir() */
   res = fs_opendir(&dirp, path);
+  z_check_stack_sentinel();
+  
   if (res) {
     printf("Error opening dir %s [%d]\n", path, res);
     return res;
@@ -73,7 +77,9 @@ static int lsdir(const char *path) {
   }
 
   /* Verify fs_closedir() */
+  z_check_stack_sentinel();
   fs_closedir(&dirp);
+  z_check_stack_sentinel();
 
   return res;
 }
@@ -94,8 +100,6 @@ static int dyn_handler(struct http_client_ctx *client,
     return 0;
   }
   printf("Test\n");
-
-  __ASSERT_NO_MSG(buffer != NULL);
 
   processed += request_ctx->data_len;
 
@@ -129,17 +133,27 @@ struct http_resource_detail_dynamic dyn_resource_detail = {
 HTTP_RESOURCE_DEFINE(dyn_resource, homo, "/dynamic", &dyn_resource_detail);
 
 int main(void) {
-
+  z_check_stack_sentinel();
   printf("homo start %x\n", homo_fs_data_start);
+  z_check_stack_sentinel();
+  
   printf("homo magic %x\n", *(uint32_t *)homo_fs_data_start);
+  z_check_stack_sentinel();
+  
   printf("homo size %x\n", homo_fs_data_size);
+  z_check_stack_sentinel();
+  
   if (fs_mount(&mp) < 0) {
     perror("mount failure !!!");
     return 0;
   }
+  z_check_stack_sentinel();
+  
   printf("mount success!!");
+  z_check_stack_sentinel();
+  
   lsdir("/abc/");
+  z_check_stack_sentinel();
+  
   http_server_start();
-  while (1)
-    ;
 }
