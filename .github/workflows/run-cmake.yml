@@ -1,0 +1,27 @@
+name: Build FIle
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  cmake-build:
+    name: CMake Build using Custom Dockerfile
+    runs-on: ubuntu-latest
+
+    container:
+      image: ghcr.io/${{ github.repository_owner }}/cmake-runner:latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Configure
+        run: bash -c "source /venv/bin/activate && west update"
+
+      - name: Build
+        run: bash -c "source /venv/bin/activate && GNUARMEMB_TOOLCHAIN_PATH=/usr west build app"
+
