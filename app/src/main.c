@@ -20,7 +20,11 @@ extern const unsigned char homo_fs_data_size[];
 static struct homo_fs_filesystem_param fs_param;
 
 static struct homo_fs_backend_param fs_backend_params = {
-    .base_addr = homo_fs_data_start, .size = (int32_t)homo_fs_data_size};
+    .base_addr = homo_fs_data_start,
+    .size = (int32_t)homo_fs_data_size,
+    .keys = "5ZCJ5oGp44CC5q24",
+    .ivs = "5bCP6LGs5Y2a6Z2I",
+};
 
 static struct fs_mount_t mp = {
     .type = FS_TYPE_EXTERNAL_BASE,

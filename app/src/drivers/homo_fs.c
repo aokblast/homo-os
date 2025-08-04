@@ -15,6 +15,8 @@
 #include <zephyr/init.h>
 #include <zephyr/storage/flash_map.h>
 
+#include <aes.h>
+
 static int homo_fs_mount(struct fs_mount_t *mount) {
   struct homo_fs_backend_param *backend = mount->storage_dev;
   struct homo_fs_filesystem_param *fs = mount->fs_data;
@@ -53,13 +55,24 @@ static int homo_fs_open(struct fs_file_t *filp, const char *fs_path,
 
 static ssize_t homo_fs_read(struct fs_file_t *filp, void *dest, size_t nbytes) {
   struct homo_fs_file_param *param = filp->filep;
+  struct homo_fs_backend_param *backend = filp->mp->storage_dev;
+  struct AES_ctx ctx;
   int max_size = homo_fs_entry_file_get_size(param->fent);
   int offset = param->offset;
   param->offset += nbytes;
   if (param->offset + nbytes > max_size)
     param->offset = max_size;
-  return homo_fs_entry_file_read_offset(param->fent, (uint8_t *)dest, nbytes,
+  nbytes = homo_fs_entry_file_read_offset(param->fent, (uint8_t *)dest, nbytes,
                                         offset);
+  if (nbytes <= 0)
+    return nbytes;
+
+  if (backend->keys) {
+    AES_init_ctx_iv(&ctx, backend->keys, backend->ivs);
+    AES_CBC_decrypt_buffer(&ctx, dest, nbytes - nbytes % 16);
+  }
+
+  return nbytes;
 }
 
 int homo_fs_lseek(struct fs_file_t *filp, off_t off, int whence) {
