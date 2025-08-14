@@ -3,7 +3,7 @@ name: Build FIle
 on:
   push:
     branches:
-      - 'main'
+      - '**'
 
 jobs:
   cmake-build:
@@ -25,3 +25,11 @@ jobs:
       - name: Build
         run: bash -c "source /venv/bin/activate && GNUARMEMB_TOOLCHAIN_PATH=/usr west build app"
 
+      - name: Verify ELF exists
+        run: ls -l build/homo_final.elf
+
+      - name: Upload ELF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: homo_final.elf
+          path: build/homo_final.elf
