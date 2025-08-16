@@ -5,6 +5,7 @@
 #include "homo_fs.h"
 
 #include <assert.h>
+#include <errno.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -15,12 +16,14 @@
 #include <zephyr/init.h>
 #include <zephyr/storage/flash_map.h>
 
+#include <aes.h>
+
 static int homo_fs_mount(struct fs_mount_t *mount) {
   struct homo_fs_backend_param *backend = mount->storage_dev;
   struct homo_fs_filesystem_param *fs = mount->fs_data;
 
   if (mount->type != FS_TYPE_EXTERNAL_BASE || backend == NULL)
-    return -1;
+    return -EINVAL;
 
   return (fs->fs = homo_fs_deserialize(backend->base_addr, backend->size)) ==
          NULL;
@@ -42,7 +45,7 @@ static int homo_fs_open(struct fs_file_t *filp, const char *fs_path,
   filp->filep = NULL;
 
   if (ent == NULL)
-    return (EINVAL);
+    return (-ENOENT);
 
   file = malloc(sizeof(struct homo_fs_file_param));
   file->offset = 0;
@@ -53,13 +56,24 @@ static int homo_fs_open(struct fs_file_t *filp, const char *fs_path,
 
 static ssize_t homo_fs_read(struct fs_file_t *filp, void *dest, size_t nbytes) {
   struct homo_fs_file_param *param = filp->filep;
+  struct homo_fs_backend_param *backend = filp->mp->storage_dev;
+  struct AES_ctx ctx;
   int max_size = homo_fs_entry_file_get_size(param->fent);
   int offset = param->offset;
   param->offset += nbytes;
-  if (param->offset + nbytes > max_size)
+  if (param->offset> max_size)
     param->offset = max_size;
-  return homo_fs_entry_file_read_offset(param->fent, (uint8_t *)dest, nbytes,
+  nbytes = homo_fs_entry_file_read_offset(param->fent, (uint8_t *)dest, nbytes,
                                         offset);
+  if (nbytes <= 0)
+    return nbytes;
+
+  if (backend->keys) {
+    AES_init_ctx_iv(&ctx, backend->keys, backend->ivs);
+    AES_CBC_decrypt_buffer(&ctx, dest, nbytes - nbytes % 16);
+  }
+
+  return nbytes;
 }
 
 int homo_fs_lseek(struct fs_file_t *filp, off_t off, int whence) {
@@ -96,6 +110,7 @@ off_t homo_fs_tell(struct fs_file_t *filp) {
 int homo_fs_close(struct fs_file_t *filp) {
   struct homo_fs_file_param *param = filp->filep;
   free(param);
+  return 0;
 }
 
 int homo_fs_opendir(struct fs_dir_t *dirp, const char *fs_path) {
@@ -104,7 +119,7 @@ int homo_fs_opendir(struct fs_dir_t *dirp, const char *fs_path) {
   fs_path += dirp->mp->mountp_len;
   file = homo_fs_find_file(param->fs, fs_path);
   if (file == NULL)
-    return -1;
+    return -ENOENT;
   dirp->dirp = homo_fs_entry_dir_get_child(file);
   return 0;
 }
@@ -132,11 +147,10 @@ int homo_fs_closedir(struct fs_dir_t *dirp __unused) { return 0; }
 int homo_fs_stat(struct fs_mount_t *mountp, const char *path,
                  struct fs_dirent *entry) {
   struct homo_fs_filesystem_param *param = mountp->fs_data;
-  struct homo_fs_file_entry *fent;
   path += mountp->mountp_len;
-  fent = homo_fs_find_file(param->fs, path);
+  struct homo_fs_file_entry *fent = homo_fs_find_file(param->fs, path);
   if (fent == NULL)
-    return EINVAL;
+    return -ENOENT;
   entry->type = homo_fs_entry_get_type(fent) == FS_DIR ? FS_DIR_ENTRY_DIR
                                                        : FS_DIR_ENTRY_FILE;
   entry->size = homo_fs_entry_get_type(fent) == FS_DIR

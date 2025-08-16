@@ -11,6 +11,8 @@
 struct homo_fs_backend_param {
   void *base_addr;
   int size;
+  const char *keys;
+  const char *ivs;
 };
 
 struct homo_fs_filesystem_param {
