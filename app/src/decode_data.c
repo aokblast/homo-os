@@ -59,7 +59,12 @@ static void decode_data_section(void *data_start, int size_of_buffer) {
 
   chacha20_init_context(&ctx, key, nonce, 0);
   chacha20_xor(&ctx, data_start, size_of_buffer);
+  return;
 }
+extern char __data_start[];
+extern char __data_end[];
+extern char _http_resource_desc_homo_list_start[];
+extern char _http_resource_desc_homo_list_end[];
 
 /**
  * @brief Copy the data section from ROM to RAM
@@ -67,20 +72,24 @@ static void decode_data_section(void *data_start, int size_of_buffer) {
  * This routine copies the data section from ROM to RAM.
  */
 
-void z_data_copy(void)
-{
-	memcpy(&__data_region_start, &__data_region_load_start,
-		       __data_region_end - __data_region_start);
-    
-    void *start_addr = &__rodata_region_start;
-    void *end_addr = &__rodata_region_end;
+void z_data_copy(void) {
+  memcpy(&__data_region_start, &__data_region_load_start,
+         __data_region_end - __data_region_start);
 
-    decode_data_section(start_addr, end_addr - start_addr);
+  void *start_addr = &__rodata_region_start;
+  void *end_addr = &__rodata_region_end;
 
-    start_addr = &__data_region_start;
-    end_addr = &__data_region_end;
+  decode_data_section(start_addr, end_addr - start_addr);
 
-    decode_data_section(start_addr, end_addr - start_addr);
+  start_addr = &__data_start;
+  end_addr = &__data_end;
+
+  decode_data_section(start_addr, end_addr - start_addr);
+
+  start_addr = &_http_resource_desc_homo_list_start;
+  end_addr = &_http_resource_desc_homo_list_end;
+
+  decode_data_section(start_addr, end_addr - start_addr);
 
 #ifdef CONFIG_ARCH_HAS_RAMFUNC_SUPPORT
   memcpy(&__ramfunc_region_start, &__ramfunc_load_start,
