@@ -11,7 +11,7 @@ LOG_MODULE_REGISTER(net_http_server_sample, LOG_LEVEL_DBG);
 
 static uint16_t http_service_port = 1919;
 
-HTTP_SERVICE_DEFINE(homo, NULL, &http_service_port, 1, 10, NULL, NULL);
+HTTP_SERVICE_DEFINE(homo, NULL, &http_service_port, 10, 10, NULL, NULL);
 
 extern const unsigned char homo_fs_data_start[];
 extern const unsigned char homo_fs_data_end[];
@@ -70,8 +70,7 @@ static int lsdir(const char *path) {
     struct fs_dirent dirent;
     assert(fs_open(&filep, "/abc/index.html.gz", FS_O_READ) == 0);
     assert(fs_stat("/abc/index.html.gz", &dirent) == 0);
-    assert(fs_read(&filep, buffer, sizeof(buffer)) == entry.size);
-
+    assert(fs_close(&filep) == 0);
     if (entry.type == FS_DIR_ENTRY_DIR) {
       printf("[DIR ] %s\n", entry.name);
     } else {

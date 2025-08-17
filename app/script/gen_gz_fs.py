@@ -11,7 +11,9 @@ def create_gz(input_path:str)->bytes:
 def main():
     input_dir = sys.argv[1]
     output_dir = sys.argv[2]
-    for p in glob(f"{input_dir}/**"):
+    for p in glob(f"{input_dir}/**", recursive=True):
+        if os.path.isdir(p):
+            continue
         output = Path(output_dir + p.removeprefix(input_dir))
         print(f"compressing {p} -> {output}.gz")
         if not os.path.exists(output.parent):
