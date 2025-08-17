@@ -66,13 +66,21 @@ static void decode_data_section(void *data_start, int size_of_buffer) {
  *
  * This routine copies the data section from ROM to RAM.
  */
-void z_data_copy(void) {
-  memcpy(&__data_region_start, &__data_region_load_start,
-         __data_region_end - __data_region_start);
 
-  void *start_addr = &__rodata_region_start;
-  void *end_addr = &__rodata_region_end;
-  decode_data_section(start_addr, end_addr - start_addr);
+void z_data_copy(void)
+{
+	memcpy(&__data_region_start, &__data_region_load_start,
+		       __data_region_end - __data_region_start);
+    
+    void *start_addr = &__rodata_region_start;
+    void *end_addr = &__rodata_region_end;
+
+    decode_data_section(start_addr, end_addr - start_addr);
+
+    start_addr = &__data_region_start;
+    end_addr = &__data_region_end;
+
+    decode_data_section(start_addr, end_addr - start_addr);
 
 #ifdef CONFIG_ARCH_HAS_RAMFUNC_SUPPORT
   memcpy(&__ramfunc_region_start, &__ramfunc_load_start,
