@@ -61,9 +61,9 @@ static ssize_t homo_fs_read(struct fs_file_t *filp, void *dest, size_t nbytes) {
   char *buffer;
   int max_size = homo_fs_entry_file_get_size(param->fent);
   int offset = param->offset;
-  
+
   param->offset += nbytes;
-  if (param->offset> max_size)
+  if (param->offset > max_size)
     param->offset = max_size;
 
   if (backend->keys) {
@@ -75,8 +75,8 @@ static ssize_t homo_fs_read(struct fs_file_t *filp, void *dest, size_t nbytes) {
     memcpy(dest, buffer + offset, MIN(nbytes, max_size - offset));
     free(buffer);
   } else {
-    nbytes = homo_fs_entry_file_read_offset(param->fent, (uint8_t *)dest, nbytes,
-                                        offset);
+    nbytes = homo_fs_entry_file_read_offset(param->fent, (uint8_t *)dest,
+                                            nbytes, offset);
   }
 
   return nbytes;
