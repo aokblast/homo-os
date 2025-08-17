@@ -58,19 +58,25 @@ static ssize_t homo_fs_read(struct fs_file_t *filp, void *dest, size_t nbytes) {
   struct homo_fs_file_param *param = filp->filep;
   struct homo_fs_backend_param *backend = filp->mp->storage_dev;
   struct AES_ctx ctx;
+  char *buffer;
   int max_size = homo_fs_entry_file_get_size(param->fent);
   int offset = param->offset;
+
   param->offset += nbytes;
-  if (param->offset> max_size)
+  if (param->offset > max_size)
     param->offset = max_size;
-  nbytes = homo_fs_entry_file_read_offset(param->fent, (uint8_t *)dest, nbytes,
-                                        offset);
-  if (nbytes <= 0)
-    return nbytes;
 
   if (backend->keys) {
+    buffer = malloc(max_size);
+    homo_fs_entry_file_read(param->fent, (uint8_t *)buffer, max_size);
     AES_init_ctx_iv(&ctx, backend->keys, backend->ivs);
-    AES_CBC_decrypt_buffer(&ctx, dest, nbytes - nbytes % 16);
+    AES_CBC_decrypt_buffer(&ctx, buffer, max_size - max_size % 16);
+    nbytes = MIN(nbytes, max_size - offset);
+    memcpy(dest, buffer + offset, MIN(nbytes, max_size - offset));
+    free(buffer);
+  } else {
+    nbytes = homo_fs_entry_file_read_offset(param->fent, (uint8_t *)dest,
+                                            nbytes, offset);
   }
 
   return nbytes;
@@ -83,21 +89,21 @@ int homo_fs_lseek(struct fs_file_t *filp, off_t off, int whence) {
   switch (whence) {
   case SEEK_CUR:
     if ((param->offset + off) > max_size || (param->offset + off) < 0)
-      return EINVAL;
+	    return (-EINVAL);
     param->offset += off;
     break;
   case SEEK_END:
     if ((max_size + off) > max_size || (max_size + off) < 0)
-      return EINVAL;
+      return -EINVAL;
     param->offset = max_size + off;
     break;
   case SEEK_SET:
     if (off > max_size || off < 0)
-      return EINVAL;
+      return -EINVAL;
     param->offset = off;
     break;
   default:
-    return EINVAL;
+    return -EINVAL;
   }
 
   return 0;
@@ -147,6 +153,7 @@ int homo_fs_closedir(struct fs_dir_t *dirp __unused) { return 0; }
 int homo_fs_stat(struct fs_mount_t *mountp, const char *path,
                  struct fs_dirent *entry) {
   struct homo_fs_filesystem_param *param = mountp->fs_data;
+  path += mountp->mountp_len;
   struct homo_fs_file_entry *fent = homo_fs_find_file(param->fs, path);
   if (fent == NULL)
     return -ENOENT;

@@ -6,3 +6,4 @@ RUN python3 -m venv venv && bash -c "source venv/bin/activate && pip3 install we
 RUN git config --global --add safe.directory /workspaces/homo-os/deps/zephyr && \
     git config --global --add safe.directory /workspaces/homo-os/deps/modules/lib/picolibc && \
     git config --global --add safe.directory /workspaces/homo-os/deps/modules/hal/cmsis
+RUN apt install -y ninja-build curl

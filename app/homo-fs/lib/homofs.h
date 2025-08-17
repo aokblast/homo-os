@@ -38,7 +38,8 @@ int homo_fs_entry_dir_delete_file(struct homo_fs_file_entry *dir,
 int homo_fs_entry_dir_foreach_files(struct homo_fs_file_entry *dir,
                                     homo_fs_dir_entry_cb *callback,
                                     void *user_data);
-struct homo_fs_file_entry *homo_fs_entry_dir_get_child(struct homo_fs_file_entry *dir);
+struct homo_fs_file_entry *
+homo_fs_entry_dir_get_child(struct homo_fs_file_entry *dir);
 
 /* file related operation */
 int homo_fs_entry_file_write_offset(struct homo_fs_file_entry *,
@@ -55,7 +56,8 @@ int homo_fs_entry_get_type(struct homo_fs_file_entry *ent);
 int homo_fs_entry_file_get_size(struct homo_fs_file_entry *ent);
 uint8_t *homo_fs_entry_file_get_buffer(struct homo_fs_file_entry *ent);
 
-struct homo_fs_file_entry * homo_fs_entry_next_file(struct homo_fs_file_entry *ent);
+struct homo_fs_file_entry *
+homo_fs_entry_next_file(struct homo_fs_file_entry *ent);
 
 /* serialization */
 int homo_fs_serialize(struct homo_fs *fs, int fd);
