@@ -185,8 +185,8 @@ int main(int argc, char *argv[]) {
   int fd, ofd, err = 0;
   int start = 1;
   int c;
-  uint8_t ckeys[16] = {0};
-  uint8_t civs[16] = {0};
+  uint8_t ckeys[17] = {0};
+  uint8_t civs[17] = {0};
 
   while ((c = getopt(argc, argv, "rk:i:")) != -1) {
     switch (c) {
