@@ -89,7 +89,7 @@ int homo_fs_lseek(struct fs_file_t *filp, off_t off, int whence) {
   switch (whence) {
   case SEEK_CUR:
     if ((param->offset + off) > max_size || (param->offset + off) < 0)
-	    return (-EINVAL);
+      return (-EINVAL);
     param->offset += off;
     break;
   case SEEK_END:
