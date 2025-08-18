@@ -96,6 +96,15 @@ export default function ContactSection() {
                     <p className="text-gray-300">下北沢駅から徒歩8分<br/>MAD気分で来店ください</p>
                   </div>
                 </div>
+
+		<div className="flex items-start space-x-3">
+                  <i className="fas fa-link text-meme-orange text-xl mt-1"></i>
+                  <div>
+                    <p className="font-semibold text-white">関連リンク</p>
+                    <p className="text-gray-300"><a className="flex rounded-lg bg-white/20 transition-colors" href="https://www.facebook.com/reel/483489504786387">ジオンの帰郷者</a><br/>
+		      <a className="flex rounded-lg bg-white/20 transition-colors" href="https://www.facebook.com/p/%E5%B0%8F%E7%8C%AA%E5%8D%9A%E6%9E%97-100068360433799">こぶたボリン</a></p>
+                  </div>
+                </div>
               </div>
             </div>
             
