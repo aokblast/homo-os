@@ -60,7 +60,7 @@ struct homo_fs_file_entry *
 homo_fs_entry_next_file(struct homo_fs_file_entry *ent);
 
 /* serialization */
-int homo_fs_serialize(struct homo_fs *fs, int fd);
+int homo_fs_serialize(struct homo_fs *fs, int fd, int random_hole);
 struct homo_fs *homo_fs_deserialize(uint8_t *buffer, size_t sz);
 
 #endif // HOMO_OS_HOMOFS_H

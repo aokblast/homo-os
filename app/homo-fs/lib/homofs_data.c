@@ -6,7 +6,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
-#ifdef HOST_BUILD
+#ifdef HOMOFS_HOST_BUILD
 #include <time.h>
 #endif
 #include <unistd.h>
@@ -28,7 +28,7 @@ int homo_fs_data_serialize(homo_fs_data_t *data, int fd, int random_hole) {
   uint8_t *shole;
   uint32_t slen;
 
-#ifdef HOST_BUILD
+#ifdef HOMOFS_HOST_BUILD
   srand(time(NULL));
 #endif
   struct homo_fs_data_header *header = &data->header;

@@ -29,7 +29,7 @@ int main() {
 
   int fd = open("./output", O_WRONLY | O_CREAT);
   assert(fd != -1);
-  homo_fs_serialize(fs, fd);
+  homo_fs_serialize(fs, fd, 0);
   homo_fs_free(fs);
   close(fd);
 

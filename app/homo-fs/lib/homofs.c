@@ -392,14 +392,14 @@ int homo_fs_deserialize_work(struct homo_fs_data *data,
   return 0;
 }
 
-int homo_fs_serialize(struct homo_fs *fs, int fd) {
+int homo_fs_serialize(struct homo_fs *fs, int fd, int random_hole) {
   struct homo_fs_data data;
   int err;
 
   if ((err = homo_fs_data_init(&data)) != 0)
     return err;
   homo_fs_serialize_work(fs->root, &data);
-  homo_fs_data_serialize(&data, fd, 0);
+  homo_fs_data_serialize(&data, fd, random_hole);
   homo_fs_data_release(&data);
 
   return 0;

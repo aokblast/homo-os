@@ -3,8 +3,8 @@ manifest:
 
   projects:
     - name: zephyr
-      revision: v4.1.0
-      url: https://github.com/zephyrproject-rtos/zephyr
+      revision: v11.45.14
+      url: https://github.com/aokblast/zephyr.git
       import:
         path-prefix: deps
         name-allowlist:
