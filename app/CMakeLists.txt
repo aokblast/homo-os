@@ -15,6 +15,7 @@ project(homo-os C ASM)
 file(GLOB DRV_SRCS ./src/drivers/*.c)
 file(GLOB FS_SRCS ./homo-fs/lib/*.c)
 file(GLOB TINYAES_SRC ./tiny-AES-c/aes.c)
+file(GLOB_RECURSE FE_SRCS ./fe/client/*)
 
 zephyr_include_directories(./homo-fs/lib/)
 zephyr_include_directories(./tiny-AES-c)
@@ -34,12 +35,24 @@ add_custom_command(
     COMMENT "Building and copying homo_pack tool"
 )
 
-# build fs
+# build frontend
+add_custom_command(
+    OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/fe/dist
+    DEPENDS ${FE_SRCS}
+    
+    COMMAND npm ci
+    COMMAND npm run build --dev
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/fe
+    COMMENT "Building frontend with npm"
+)
+
+# build gz
 add_custom_command(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/homo_fs_data
-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/fe ${CMAKE_CURRENT_BINARY_DIR}/homo_pack
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/fe/dist ${CMAKE_CURRENT_BINARY_DIR}/homo_pack
+
     COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/script/gen_gz_fs.py
-        ${CMAKE_CURRENT_SOURCE_DIR}/fe
+        ${CMAKE_CURRENT_SOURCE_DIR}/fe/dist/public
         ${CMAKE_CURRENT_BINARY_DIR}/fe_gz
     COMMAND ${CMAKE_CURRENT_BINARY_DIR}/homo_pack -k 5ZCJ5oGp44CC5q24 -i 5bCP6LGs5Y2a6Z2I ${CMAKE_CURRENT_BINARY_DIR}/fe_gz ${CMAKE_CURRENT_BINARY_DIR}/homo_fs_data
 )

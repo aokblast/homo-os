@@ -1,0 +1,8 @@
+services:
+  srv:
+    build: .devcontainer/.
+    volumes:
+      - .:/root
+    privileged: true
+    network_mode: host
+    entrypoint: /bin/bash -c "cd ~ && bash ifup.sh && bash run.sh"
