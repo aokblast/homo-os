@@ -15,7 +15,7 @@ project(homo-os C ASM)
 file(GLOB DRV_SRCS ./src/drivers/*.c)
 file(GLOB FS_SRCS ./homo-fs/lib/*.c)
 file(GLOB TINYAES_SRC ./tiny-AES-c/aes.c)
-file(GLOB FE_SRCS ./fe/client/*)
+file(GLOB_RECURSE FE_SRCS ./fe/client/*)
 
 zephyr_include_directories(./homo-fs/lib/)
 zephyr_include_directories(./tiny-AES-c)

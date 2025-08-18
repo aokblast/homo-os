@@ -1,4 +1,4 @@
-import { galleryItems } from "@/lib/meme-data";
+import { galleryItems } from "../lib/meme-data";
 
 export default function GallerySection() {
   return (

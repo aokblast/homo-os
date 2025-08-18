@@ -1,4 +1,4 @@
-import { playMemeSound } from "@/lib/sounds";
+import { playMemeSound } from "../lib/sounds";
 
 export default function HeroSection() {
   const handleReservationClick = () => {

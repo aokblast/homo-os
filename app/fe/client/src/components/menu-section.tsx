@@ -1,4 +1,4 @@
-import { menuItems } from "@/lib/meme-data";
+import { menuItems } from "../lib/meme-data";
 
 export default function MenuSection() {
   return (

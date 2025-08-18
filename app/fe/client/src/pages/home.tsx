@@ -1,10 +1,10 @@
-import Navigation from "@/components/navigation";
-import HeroSection from "@/components/hero-section";
-import MenuSection from "@/components/menu-section";
-import ReservationSection from "@/components/reservation-section";
-import GallerySection from "@/components/gallery-section";
-import ContactSection from "@/components/contact-section";
-import Footer from "@/components/footer";
+import Navigation from "../components/navigation";
+import HeroSection from "../components/hero-section";
+import MenuSection from "../components/menu-section";
+import ReservationSection from "../components/reservation-section";
+import GallerySection from "../components/gallery-section";
+import ContactSection from "../components/contact-section";
+import Footer from "../components/footer";
 import { useEffect } from "react";
 
 export default function Home() {

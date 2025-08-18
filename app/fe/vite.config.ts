@@ -1,36 +1,37 @@
 import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
 import path from "path";
-import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
-import { viteExternalsPlugin } from "vite-plugin-externals";
-import { visualizer } from "rollup-plugin-visualizer";
+import cdn from 'vite-plugin-cdn-import'
 
 export default defineConfig({
-  plugins: [
-    react(),
-    visualizer({
-      emitFile: true,
-      filename: "stats.html",
-    }),
-    viteExternalsPlugin({
-        react: "React",
-        "react-dom": "ReactDOM",
-        "react-dom/client": "ReactDOM",
-        'react/jsx-runtime': 'jsxRuntime' // global from CDN
-    }),
-    runtimeErrorOverlay()
-  ],
-  resolve: {
-    alias: {
-      "@": path.resolve(import.meta.dirname, "client", "src"),
-      "@shared": path.resolve(import.meta.dirname, "shared"),
-      "@assets": path.resolve(import.meta.dirname, "attached_assets"),
-    },
-  },
   root: path.resolve(import.meta.dirname, "client"),
+  plugins: [
+    cdn({
+      modules: [
+        {
+          name: 'react',
+          var: 'React',
+          path: `https://unpkg.com/react@18/umd/react.production.min.js`,
+        },
+        {
+          name: 'react-dom',
+          var: 'ReactDOM',
+          path: `https://unpkg.com/react-dom@18/umd/react-dom.production.min.js`,
+        },
+      ],
+    }),
+    ],
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    rollupOptions: {
+      external: ["react", "react-dom"],
+      output: {
+        globals: {
+          react: "React",
+          "react-dom": "ReactDOM",
+        },
+      },
+    },
   },
   server: {
     fs: {

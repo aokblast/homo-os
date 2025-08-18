@@ -34,57 +34,6 @@ static struct fs_mount_t mp = {
     .mnt_point = "/abc",
 };
 
-static int lsdir(const char *path) {
-  int res;
-  struct fs_dir_t dirp = {0};
-  struct fs_dirent entry = {0};
-  struct fs_file_t filep = {0};
-  char buffer[1024] = {0};
-
-  z_check_stack_sentinel();
-  fs_dir_t_init(&dirp);
-  z_check_stack_sentinel();
-
-  /* Verify fs_opendir() */
-  res = fs_opendir(&dirp, path);
-  z_check_stack_sentinel();
-
-  if (res) {
-    printf("Error opening dir %s [%d]\n", path, res);
-    return res;
-  }
-
-  printf("\nListing dir %s ...\n", path);
-  for (;;) {
-    /* Verify fs_readdir() */
-    res = fs_readdir(&dirp, &entry);
-
-    /* entry.name[0] == 0 means end-of-dir */
-    if (res || entry.name[0] == 0) {
-      if (res < 0) {
-        printf("Error reading dir [%d]\n", res);
-      }
-      break;
-    }
-
-    struct fs_dirent dirent;
-    assert(fs_open(&filep, "/abc/index.html.gz", FS_O_READ) == 0);
-    assert(fs_stat("/abc/index.html.gz", &dirent) == 0);
-    assert(fs_close(&filep) == 0);
-    if (entry.type == FS_DIR_ENTRY_DIR) {
-      printf("[DIR ] %s\n", entry.name);
-    } else {
-      printf("[FILE] %s (size = %zu)\n", entry.name, entry.size);
-    }
-  }
-
-  /* Verify fs_closedir() */
-  z_check_stack_sentinel();
-  fs_closedir(&dirp);
-  z_check_stack_sentinel();
-
-  return res;
-}
 
 static int dyn_handler(struct http_client_ctx *client,
                        enum http_data_status status,
@@ -271,15 +220,7 @@ int main(void) {
                  "---------------------:::::::::::::::::::\n"
                  "****************************########*++==========------------"
                  "---------------------::-::::::::::::::::");
-  z_check_stack_sentinel();
-  printf("homo start %x\n", homo_fs_data_start);
-  z_check_stack_sentinel();
-
-  printf("homo magic %x\n", *(uint32_t *)homo_fs_data_start);
-  z_check_stack_sentinel();
-
-  printf("homo size %x\n", homo_fs_data_size);
-  z_check_stack_sentinel();
+  
 
   if (fs_mount(&mp) < 0) {
     perror("mount failure !!!");
@@ -288,9 +229,6 @@ int main(void) {
   z_check_stack_sentinel();
 
   printf("mount success!!");
-  z_check_stack_sentinel();
-
-  lsdir("/abc/");
   z_check_stack_sentinel();
 
   http_server_start();
