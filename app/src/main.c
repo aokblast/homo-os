@@ -226,10 +226,6 @@ int main(void) {
     perror("mount failure !!!");
     return 0;
   }
-  z_check_stack_sentinel();
-
-  printf("mount success!!");
-  z_check_stack_sentinel();
 
   http_server_start();
 }

@@ -23,13 +23,22 @@ jobs:
         run: bash -c "source /venv/bin/activate && west update"
 
       - name: Build
-        run: bash -c "source /venv/bin/activate && GNUARMEMB_TOOLCHAIN_PATH=/usr west build app"
+        run: bash -c "source /venv/bin/activate && CONF_FILE=prj.conf.prod GNUARMEMB_TOOLCHAIN_PATH=/usr west build app"
+
+      - name: Strip binary
+        run: cp build/homo_final.elf build/homo_final_orig.elf && arm-none-eabi-strip build/homo_final.elf
 
       - name: Verify ELF exists
         run: ls -l build/homo_final.elf
 
-      - name: Upload ELF artifact
+      - name: Upload stripped ELF artifact
         uses: actions/upload-artifact@v4
         with:
           name: homo_final.elf
           path: build/homo_final.elf
+
+      - name: Upload non-stripped ELF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: homo_final_orig.elf
+          path: build/homo_final_orig.elf

@@ -19,13 +19,15 @@
 
 #include "homofs.h"
 
-int f_rev = 0, f_key = 0;
+int f_rev = 0, f_key = 0, f_random_hole = 0;
 static uint8_t *keys = NULL, *ivs = NULL;
 
 __attribute__((noreturn)) void usage() {
-  printf("homo_pack -r -k<key> <dir> <out_file>\n");
+  printf("homo_pack -h -r -k<key> <dir> <out_file>\n");
   printf("-r unpack\n");
   printf("-k <key> specified key\n");
+  printf("-iv <iv> specified iv\n");
+  printf("-r random hole \n");
   exit(1);
 }
 
@@ -150,7 +152,7 @@ static int do_dfs_serialize(int dfd, int ofd, const char *path) {
     printf("Failed to parse\n");
     return 1;
   }
-  err = homo_fs_serialize(fs, ofd);
+  err = homo_fs_serialize(fs, ofd, f_random_hole);
   homo_fs_free(fs);
 
   return err;
@@ -188,7 +190,7 @@ int main(int argc, char *argv[]) {
   uint8_t ckeys[17] = {0};
   uint8_t civs[17] = {0};
 
-  while ((c = getopt(argc, argv, "rk:i:")) != -1) {
+  while ((c = getopt(argc, argv, "rk:i:h")) != -1) {
     switch (c) {
     case 'r':
       f_rev = 1;
@@ -200,6 +202,10 @@ int main(int argc, char *argv[]) {
     case 'i':
       strncpy(civs, optarg, sizeof(civs));
       ivs = civs;
+      break;
+    case 'h':
+      f_random_hole = 1;
+      break;
     default:
       break;
     }
