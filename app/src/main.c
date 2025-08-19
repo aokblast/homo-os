@@ -31,42 +31,43 @@ static struct fs_mount_t mp = {
     .storage_dev = &fs_backend_params,
     .fs_data = &fs_param,
     .flags = 0,
-    .mnt_point = "/abc",
+    .mnt_point = "/server",
 };
 
+extern void RC4(char *key, char *plaintext, unsigned char *ciphertext, int len);
 
+HTTP_SERVER_REGISTER_HEADER_CAPTURE(capture_user_agent, "HOMO-KEY");
 static int dyn_handler(struct http_client_ctx *client,
                        enum http_data_status status,
                        const struct http_request_ctx *request_ctx,
                        struct http_response_ctx *response_ctx,
                        void *user_data) {
-#define MAX_TEMP_PRINT_LEN 32
-  static char print_str[MAX_TEMP_PRINT_LEN];
   enum http_method method = client->method;
-  static size_t processed;
-
-  if (status == HTTP_SERVER_DATA_ABORTED) {
-    LOG_DBG("Transaction aborted after %zd bytes.", processed);
-    processed = 0;
+  if (request_ctx->header_count == 0 || strlen(request_ctx->headers[0].value) != 5 || request_ctx->data_len <= 6) // key: 48763
+  {
+    dead:
+    response_ctx->status = HTTP_418_IM_A_TEAPOT;
+    response_ctx->body_len = 0;
+    response_ctx->final_chunk = true;
     return 0;
   }
-  printf("Test\n");
-
-  processed += request_ctx->data_len;
-
-  snprintf(print_str, sizeof(print_str), "%s received (%zd bytes)",
-           http_method_str(method), request_ctx->data_len);
-  LOG_HEXDUMP_DBG(request_ctx->data, request_ctx->data_len, print_str);
-
-  if (status == HTTP_SERVER_DATA_FINAL) {
-    LOG_DBG("All data received (%zd bytes).", processed);
-    processed = 0;
+  RC4(request_ctx->headers[0].value, request_ctx->data, request_ctx->data, request_ctx->data_len);
+  if (
+    request_ctx->data[0] == 'h' && \
+    request_ctx->data[1] == 'i' && \
+    request_ctx->data[2] == 't' && \
+    request_ctx->data[3] == 'c' && \
+    request_ctx->data[4] == 'o' && \
+    request_ctx->data[5] == 'n'
+  )
+  {
+    response_ctx->status = HTTP_200_OK;
+    response_ctx->body = request_ctx->data;
+    response_ctx->body_len = request_ctx->data_len;
+    response_ctx->final_chunk = true;
   }
-
-  /* Echo data back to client */
-  response_ctx->body = request_ctx->data;
-  response_ctx->body_len = request_ctx->data_len;
-  response_ctx->final_chunk = (status == HTTP_SERVER_DATA_FINAL);
+  else
+    goto dead;
 
   return 0;
 }
@@ -86,11 +87,11 @@ static struct http_resource_detail_static_fs static_file_resource_detail = {
             .type = HTTP_RESOURCE_TYPE_STATIC_FS,
             .bitmask_of_supported_http_methods = BIT(HTTP_GET),
         },
-    .fs_path = "/abc"};
+    .fs_path = "/server/public"};
 
 HTTP_RESOURCE_DEFINE(static_file_resource, homo, "/*",
                      &static_file_resource_detail);
-HTTP_RESOURCE_DEFINE(dyn_resource, homo, "/dynamic", &dyn_resource_detail);
+HTTP_RESOURCE_DEFINE(dyn_resource, homo, "/sankai", &dyn_resource_detail);
 
 int main(void) {
   printf("Homo OS v114.514 start\n");
