@@ -25,6 +25,9 @@ jobs:
       - name: Build
         run: bash -c "source /venv/bin/activate && CONF_FILE=prj.conf.prod GNUARMEMB_TOOLCHAIN_PATH=/usr west build app"
 
+      - name: Rename section
+        run: arm-none-eabi-objcopy --rename-section rom_start=24 --rename-section initlevel=yajyuu --rename-section device_area=senpai --rename-section sw_isr_table=114514 --rename-section "_static_thread_data_area"=babylon34 --rename-section flash_driver_api_area=beer --rename-section gpio_driver_api_area=theIMP --rename-section uart_driver_api_area=homo --rename-section net_l3_register_area=hakushin --rename-section net_socket_register_area=kuzu --rename-section http_service_desc_area=sodayo --rename-section device_states=anosa --rename-section k_mem_slab_area=kaiinsei --rename-section k_heap_area=resutoran --rename-section k_mutex_area=nonke --rename-section k_msgq_area=ha --rename-section k_sem_area=shinren --rename-section net_buf_pool_area=810 --rename-section net_if_area=1919 --rename-section net_if_dev_area=889464 --rename-section net_l2_area=364 --rename-section http_resource_desc_homo_area=931 --rename-section http_content_type_area=893 --rename-section .last_section=haitte  build/homo_final.elf  build/homo_final.elf
+
       - name: Strip binary
         run: cp build/homo_final.elf build/homo_final_orig.elf && arm-none-eabi-strip build/homo_final.elf
 
