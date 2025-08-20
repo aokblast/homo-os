@@ -34,11 +34,14 @@ jobs:
       - name: Verify ELF exists
         run: ls -l build/homo_final.elf
 
-      - name: Upload stripped ELF artifact
+      - name: Pack to zip
+        run: zip dist.zip -r build docker-compose.yml ifup.sh run.sh
+
+      - name: Upload zip
         uses: actions/upload-artifact@v4
         with:
-          name: homo_final.elf
-          path: build/homo_final.elf
+          name: dist.zip
+          path: dist.zip
 
       - name: Upload non-stripped ELF artifact
         uses: actions/upload-artifact@v4
