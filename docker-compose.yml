@@ -1,6 +1,6 @@
 services:
   srv:
-    build: .devcontainer/.
+    build: .
     volumes:
       - .:/root
     privileged: true

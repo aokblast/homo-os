@@ -1,4 +1,4 @@
-name: Build FIle
+name: Build File
 
 on:
   push:
@@ -35,7 +35,7 @@ jobs:
         run: ls -l build/homo_final.elf
 
       - name: Pack to zip
-        run: zip dist.zip -r build docker-compose.yml ifup.sh run.sh
+        run: zip dist.zip -r build docker-compose.yml ifup.sh run.sh Dockerfile
 
       - name: Upload zip
         uses: actions/upload-artifact@v4
