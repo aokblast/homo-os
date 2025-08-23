@@ -87,10 +87,8 @@ def encrypt(input_file:str, output_file:str):
 
 if __name__ == "__main__":
     print(encrypt_logic("48763", b"123456").hex())
-    '''
     if len(sys.argv) != 3:
         print(f"{sys.argv[0]} <input> <output>")
         exit(-1)
     print("[encrypting flag...]")
     encrypt(sys.argv[1], sys.argv[2])
-    '''
